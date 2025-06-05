@@ -5,6 +5,11 @@ import { appRouter } from "./router";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={appRouter} />
+    <RouterProvider
+      router={appRouter}
+      future={{
+        v7_startTransition: true,
+      }}
+    />
   </StrictMode>
 );
