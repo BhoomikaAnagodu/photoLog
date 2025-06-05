@@ -1,0 +1,63 @@
+import { useEffect, useRef, useState } from "react";
+import { logout } from "../utils/utils";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useSnackbar } from "../context/SnackBarContext";
+
+const useHeader = () => {
+  const { user } = useAuth();
+  const [isAccMenuVisible, setIsAccMenuVisible] = useState<boolean>(false);
+  const { snackbar, setSnackbar } = useSnackbar();
+
+  const accountRef = useRef<HTMLLIElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const toggleMenu = () => {
+    setIsAccMenuVisible((prev) => !prev);
+  };
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(event.target as Node)
+      ) {
+        setIsAccMenuVisible(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleLogout = () => {
+    setTimeout(async () => {
+      const snackbar = await logout();
+      setSnackbar(snackbar);
+      if (location.pathname === "/") {
+        window.location.reload();
+      } else {
+        navigate("/");
+      }
+    }, 2000);
+  };
+
+  return {
+    handleLogout,
+    toggleMenu,
+    accountRef,
+    navigate,
+    location,
+    snackbar,
+    isAccMenuVisible,
+    user,
+    setSnackbar,
+  };
+};
+
+export default useHeader;
