@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@theme {
+  --color-theme-lilac-100: #eee6f9;
+  --color-theme-lilac-900: #b692e5;
+  --color-theme-lilac: #ae86e3;
+
+  --font-cagliostro: "Cagliostro", sans-serif;
+}
