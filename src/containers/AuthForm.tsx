@@ -20,17 +20,15 @@ const AuthForm = ({ isSignup = false, isModal = false }: Props) => {
 
   return (
     <div
-      className={`bg-white border-stone-600 place-content-center ${
+      className={`bg-white border-stone-600 grid place-items-center ${
         isModal ? "" : "h-dvh"
       }`}
     >
       <div
-        className={`${
-          isModal ? "" : "w-3/6"
-        } border-t-stone-100 border-t-1 mx-auto p-10`}
+        className={`${isModal ? "" : "w-full md:w-4/6 lg:w-3/6"} mx-auto p-5`}
       >
         <form onSubmit={handleSubmit}>
-          <h1 className="text-3xl text-gray-700 text-center py-1 font-bold tracking-wide">
+          <h1 className="text-2xl md:text-3xl text-gray-700 text-center py-1 font-bold tracking-wide">
             {showSignupForm ? "Sign up" : "Login"}
           </h1>
           {Object.entries(formSchema).map(([key, field]) => (

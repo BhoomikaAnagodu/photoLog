@@ -6,7 +6,7 @@ const SearchComponent = () => {
   const { searchQuery, handleChange, isFetching } = useAppContext();
 
   return (
-    <form className="max-w-lg w-full mx-auto">
+    <form className="w-4/6 lg:w-2/6 mx-auto">
       <div className="relative">
         <div className="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
           {isFetching ? (

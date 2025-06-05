@@ -11,7 +11,7 @@ const MainContainer = () => {
         <AppContextProvider>
           <div className="relative w-full">
             <Header />
-            <div className="aspect-auto w-5/6 mx-auto">
+            <div className="aspect-auto w-11/12 lg:w-5/6 mx-auto">
               <Outlet />
             </div>
           </div>

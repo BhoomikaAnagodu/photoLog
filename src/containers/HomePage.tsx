@@ -6,10 +6,10 @@ import NoResultFound_Img from "../assets/images/no_result_found.jpg";
 import MediaCard from "./MediaCard";
 
 const breakpointColumnsObj = {
-  default: 4,
-  1024: 3,
-  768: 2,
-  480: 1,
+  default: 5,
+  1024: 4,
+  768: 3,
+  480: 2,
 };
 
 const HomePage = () => {
