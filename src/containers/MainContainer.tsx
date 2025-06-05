@@ -1,9 +1,10 @@
 import { Outlet } from "react-router-dom";
+import Header from "./Header";
 
 const MainContainer = () => {
   return (
     <>
-      <h1 className="text-2xl my-10 text-center">Main Container</h1>
+      <Header />
       <Outlet />
     </>
   );
