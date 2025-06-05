@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
+
 import Logo from "../assets/icons/logo.svg?react";
 import Account from "../assets/icons/account.svg?react";
 import Logout from "../assets/icons/logout.svg?react";
 
 import useHeader from "../hooks/useHeader";
+import SearchComponent from "./SearchComponent";
 
 const Header = () => {
   const { handleLogout, toggleMenu, accountRef, isAccMenuVisible, user } =
@@ -17,6 +19,7 @@ const Header = () => {
               <Logo className="w-12 h-10" />
             </NavLink>
           </div>
+          <SearchComponent />
           <div>
             <ul>
               {user ? (

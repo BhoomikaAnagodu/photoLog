@@ -1,4 +1,5 @@
 import type { User } from "firebase/auth";
+import type { Dispatch, SetStateAction } from "react";
 
 export interface AuthContextType {
   user: User | null;
@@ -32,4 +33,24 @@ export interface AuthFormSchema {
   email: InputFieldType;
   password: InputFieldType;
   confirmPassword?: InputFieldType;
+}
+
+export type AuthAction = () => void | Promise<void>;
+
+export interface ImageType {
+  id: string;
+  alt_description: string;
+  description: string | null;
+  urls: { small: string; regular: string };
+  user: { name: string };
+}
+
+export interface AppContextType {
+  list: ImageType[];
+  setList: Dispatch<SetStateAction<ImageType[]>>;
+  searchQuery: string;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  isFetching: boolean;
+  setIsFetching: Dispatch<SetStateAction<boolean>>;
 }
