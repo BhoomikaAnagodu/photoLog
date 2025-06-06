@@ -1,6 +1,7 @@
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
   type UserCredential,
 } from "firebase/auth";
 import auth from "../services/auth";
@@ -17,4 +18,9 @@ export const loginUser = (
   password: string
 ): Promise<UserCredential> => {
   return signInWithEmailAndPassword(auth, email, password);
+};
+
+export const logoutUser = async (): Promise<void> => {
+  await new Promise((resolve) => setTimeout(resolve, 200));
+  return signOut(auth);
 };

@@ -2,14 +2,9 @@ import { useState } from "react";
 import Hide_Password from "../assets/icons/hide_password.svg?react";
 import Show_Password from "../assets/icons/show_password.svg?react";
 
-interface InputFieldProps {
+interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  id: string;
   label?: string;
-  type: string;
-  value: string;
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  placeholder?: string;
   error?: string;
 }
 
@@ -51,6 +46,8 @@ const InputField = ({
           className={`w-full border px-3 py-2 rounded focus:shadow-outline outline-theme-lilac focus:ring ${
             error ? "border-red-500" : "border-gray-300"
           }`}
+          aria-invalid={!!error}
+          aria-describedby={error ? `${id}-error` : undefined}
         />
         {isPasswordType && (
           <button
@@ -67,7 +64,11 @@ const InputField = ({
           </button>
         )}
       </div>
-      {error && <p className="text-red-500 text-xs my-1">{error}</p>}
+      {error && (
+        <p id={`${id}-error`} className="text-red-500 text-xs my-1">
+          {error}
+        </p>
+      )}
     </div>
   );
 };

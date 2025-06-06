@@ -9,15 +9,17 @@ import {
   passwordSchema,
   userNameSchema,
 } from "../utils/schema";
-import { loginUser, registerUser } from "../networks/authService";
-import { updateUserProfile } from "../networks/userService";
+import { loginUser, registerUser } from "../networks/auth";
+import { updateUserProfile } from "../networks/user";
+import type { User } from "firebase/auth";
 
 interface Props {
   isSignup: boolean;
   isModal?: boolean;
+  handleLoginClose?: (user: User) => void;
 }
 
-const useAuthForm = ({ isSignup, isModal }: Props) => {
+const useAuthForm = ({ isSignup, isModal, handleLoginClose }: Props) => {
   const [formSchema, setFormSchema] = useState<AuthFormSchema>({
     email: emailSchema,
     password: passwordSchema,
@@ -33,9 +35,11 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
   const navigate = useNavigate();
 
   const validateField = (fields: AuthFormSchema) => {
-    const errors: Record<string, string> = {};
+    const errors: Partial<Record<keyof AuthFormSchema, string>> = {};
 
-    Object.entries(fields).forEach(([key, field]: [string, InputFieldType]) => {
+    (
+      Object.entries(fields) as [keyof AuthFormSchema, InputFieldType][]
+    ).forEach(([key, field]) => {
       const { value, validations = [] } = field;
 
       for (const rule of validations) {
@@ -125,16 +129,18 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
       setSnackbar({
         type: "success",
         message: showSignupForm ? "Successful Signup" : "Successful Login",
-        autoDismiss: false,
       });
 
-      navigate("/");
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error: any) {
+      if (isModal) {
+        handleLoginClose?.(user);
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      const err = error as { code?: string };
       setSnackbar({
         type: "error",
-        message: handleAuthErrors(error.code),
+        message: handleAuthErrors(err.code ?? ""),
         autoDismiss: false,
       });
     } finally {

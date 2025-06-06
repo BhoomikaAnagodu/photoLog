@@ -35,14 +35,13 @@ const useHomePage = () => {
       setList((list) => {
         return newSearch ? [...data.results] : [...list, ...data.results];
       });
-    } catch (error) {
-      if (error instanceof Error) {
-        setSnackbar({
-          type: "error",
-          message:
-            error?.message || "Something went wrong while fetching images.",
-        });
-      }
+    } catch (err) {
+      const error = err as Error;
+      setSnackbar({
+        type: "error",
+        message:
+          error?.message || "Something went wrong while fetching images.",
+      });
     } finally {
       setIsFetching(false);
     }

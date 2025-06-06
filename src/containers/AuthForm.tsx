@@ -1,13 +1,19 @@
 import InputField from "../components/InputField";
 import type { AuthFormSchema } from "../utils/type";
 import useAuthForm from "../hooks/useAuthForm";
+import type { User } from "firebase/auth";
 
 interface Props {
   isSignup?: boolean;
   isModal?: boolean;
+  handleLoginClose?: (user: User) => void;
 }
 
-const AuthForm = ({ isSignup = false, isModal = false }: Props) => {
+const AuthForm = ({
+  isSignup = false,
+  isModal = false,
+  handleLoginClose,
+}: Props) => {
   const {
     formSchema,
     formErrors,
@@ -16,7 +22,12 @@ const AuthForm = ({ isSignup = false, isModal = false }: Props) => {
     isSubmitting,
     handleNavigation,
     showSignupForm,
-  } = useAuthForm({ isSignup, isModal });
+  } = useAuthForm({ isSignup, isModal, handleLoginClose });
+
+  const entries = Object.entries(formSchema) as [
+    keyof AuthFormSchema,
+    (typeof formSchema)[keyof AuthFormSchema]
+  ][];
 
   return (
     <div
@@ -25,24 +36,24 @@ const AuthForm = ({ isSignup = false, isModal = false }: Props) => {
       }`}
     >
       <div
-        className={`${isModal ? "" : "w-full md:w-4/6 lg:w-3/6"} mx-auto p-5`}
+        className={`${isModal ? "w-full" : "w-full md:w-4/6 lg:w-3/6"} mx-auto p-5`}
       >
         <form onSubmit={handleSubmit}>
           <h1 className="text-2xl md:text-3xl text-gray-700 text-center py-1 font-bold tracking-wide">
             {showSignupForm ? "Sign up" : "Login"}
           </h1>
-          {Object.entries(formSchema).map(([key, field]) => (
-            <div key={field.id} className="my-4">
+          {entries.map(([key, field]) => (
+            <div key={field?.id} className="my-4">
               <InputField
-                label={field.label}
-                id={field.id}
-                type={field.type}
-                value={field.value}
-                placeholder={field.placeholder}
+                label={field?.label}
+                id={field?.id}
+                type={field?.type}
+                value={field?.value}
+                placeholder={field?.placeholder}
                 onChange={(e) =>
                   handleOnChange(e.target.value, key as keyof AuthFormSchema)
                 }
-                error={formErrors[field.id]}
+                error={formErrors[key]}
               />
             </div>
           ))}

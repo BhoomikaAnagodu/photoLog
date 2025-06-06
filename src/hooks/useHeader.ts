@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { logout } from "../utils/utils";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useSnackbar } from "../context/SnackBarContext";
+import { logoutUser } from "../networks/auth";
+import { useLoader } from "../context/LoaderContext";
+import { clearSessionStorage } from "../utils/utils";
 
 const useHeader = () => {
   const { user } = useAuth();
   const [isAccMenuVisible, setIsAccMenuVisible] = useState<boolean>(false);
   const { snackbar, setSnackbar } = useSnackbar();
+  const { setLoading } = useLoader();
 
   const accountRef = useRef<HTMLLIElement>(null);
   const navigate = useNavigate();
@@ -35,16 +38,27 @@ const useHeader = () => {
     };
   }, []);
 
-  const handleLogout = () => {
-    setTimeout(async () => {
-      const snackbar = await logout();
-      setSnackbar(snackbar);
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      await logoutUser();
+      clearSessionStorage(); // Clear any stored session data
+      setSnackbar({ type: "success", message: "Succefully Logout" });
       if (location.pathname === "/") {
         window.location.reload();
       } else {
         navigate("/");
       }
-    }, 2000);
+    } catch (err) {
+      const error = err as Error;
+      setSnackbar({
+        type: "error",
+        message:
+          error?.message || "Error while signing out. Please try again later",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return {
