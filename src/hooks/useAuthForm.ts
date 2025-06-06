@@ -1,11 +1,5 @@
 import { useEffect, useState } from "react";
-import type { AuthFormSchema } from "../utils/type";
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-} from "firebase/auth";
-import auth from "../services/auth";
+import type { AuthFormSchema, InputFieldType } from "../utils/type";
 import { useNavigate } from "react-router-dom";
 import { handleAuthErrors } from "../utils/utils";
 import { useSnackbar } from "../context/SnackBarContext";
@@ -15,6 +9,8 @@ import {
   passwordSchema,
   userNameSchema,
 } from "../utils/schema";
+import { loginUser, registerUser } from "../networks/authService";
+import { updateUserProfile } from "../networks/userService";
 
 interface Props {
   isSignup: boolean;
@@ -26,7 +22,9 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
     email: emailSchema,
     password: passwordSchema,
   });
-  const [formErrors, setFormErrors] = useState<{ [key: string]: string }>({});
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof AuthFormSchema, string>>
+  >({});
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [showSignupForm, setShowSignupForm] = useState<boolean>(isSignup);
 
@@ -37,13 +35,11 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
   const validateField = (fields: AuthFormSchema) => {
     const errors: Record<string, string> = {};
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    Object.entries(fields).forEach(([key, field]: [string, any]) => {
-      const value = field.value;
-      const validations = field.validations || [];
+    Object.entries(fields).forEach(([key, field]: [string, InputFieldType]) => {
+      const { value, validations = [] } = field;
 
       for (const rule of validations) {
-        if (rule.required && !value) {
+        if (rule.required && !value.trim()) {
           errors[key] = rule.errMessage;
           break;
         }
@@ -53,10 +49,7 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
           break;
         }
 
-        if (
-          rule.matchField &&
-          value !== fields[rule.matchField as keyof AuthFormSchema]?.value
-        ) {
+        if (rule.matchField && value !== fields[rule.matchField]?.value) {
           errors[key] = rule.errMessage;
           break;
         }
@@ -71,6 +64,15 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
       ...prev,
       [id]: { ...prev[id], value },
     }));
+
+    setFormErrors((prev) => {
+      if (prev[id]) {
+        const errors = { ...prev };
+        delete errors[id];
+        return errors;
+      }
+      return prev;
+    });
   };
 
   // Function to Handle form submission
@@ -84,7 +86,7 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
 
     // Check if there are no errors before allowing submission
     const isValid = Object.values(updatedErrors).every(
-      (fieldError) => !fieldError?.trim()
+      (fieldError) => !fieldError || fieldError.trim() === ""
     );
 
     if (!isValid) {
@@ -93,30 +95,22 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
     }
 
     try {
-      const email = formSchema.email.value;
-      const password = formSchema.password.value;
-      const userName = formSchema?.userName?.value;
+      const { email, password, userName } = formSchema;
+      const emailValue = email.value;
+      const passwordValue = password.value;
 
       let userCredential;
       if (showSignupForm) {
-        userCredential = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        userCredential = await registerUser(emailValue, passwordValue);
+        if (userName?.value) {
+          await updateUserProfile(userCredential.user, {
+            displayName: userName.value,
+          });
+        }
       } else {
-        userCredential = await signInWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        userCredential = await loginUser(emailValue, passwordValue);
       }
-      const user = userCredential.user;
-      if (showSignupForm) {
-        await updateProfile(userCredential.user, {
-          displayName: userName,
-        });
-      }
+      const { user } = userCredential;
       const token = await user.getIdToken();
 
       sessionStorage.setItem(
@@ -127,12 +121,15 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
           accessToken: token,
         })
       );
+
       setSnackbar({
         type: "success",
         message: showSignupForm ? "Successful Signup" : "Successful Login",
         autoDismiss: false,
       });
+
       navigate("/");
+
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setSnackbar({
@@ -140,29 +137,28 @@ const useAuthForm = ({ isSignup, isModal }: Props) => {
         message: handleAuthErrors(error.code),
         autoDismiss: false,
       });
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   useEffect(() => {
-    setFormSchema((prev) => {
-      const { confirmPassword, userName, ...rest } = prev;
-
-      if (showSignupForm && !userName && !confirmPassword) {
+    setFormSchema(() => {
+      if (showSignupForm) {
         return {
           userName: userNameSchema,
-          ...rest,
+          email: emailSchema,
+          password: passwordSchema,
           confirmPassword: confirmPasswordSchema,
         };
-      }
-
-      if (!showSignupForm) {
+      } else {
         return {
-          ...rest,
+          email: emailSchema,
+          password: passwordSchema,
         };
       }
-      return prev;
     });
+    setFormErrors({});
   }, [showSignupForm]);
 
   useEffect(() => {
