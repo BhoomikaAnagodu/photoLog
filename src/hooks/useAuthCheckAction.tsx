@@ -3,6 +3,7 @@ import AuthForm from "../containers/AuthForm";
 import { useAuth } from "../context/AuthContext";
 import Modal from "../components/Modal";
 import type { AuthAction } from "../utils/type";
+import type { User } from "firebase/auth";
 
 export const useAuthCheckAction = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ export const useAuthCheckAction = () => {
       if (user) {
         setLoading(true);
         try {
-          await action();
+          await action(user);
         } finally {
           setLoading(false);
         }
@@ -27,12 +28,12 @@ export const useAuthCheckAction = () => {
     [user]
   );
 
-  const handleLoginClose = async () => {
+  const handleLoginClose = async (user: User | null) => {
     setShowLogin(false);
     if (user && pendingAction) {
       setLoading(true);
       try {
-        await pendingAction();
+        await pendingAction(user);
       } finally {
         setPendingAction(null);
         setLoading(false);
@@ -42,9 +43,9 @@ export const useAuthCheckAction = () => {
 
   const Login = showLogin ? (
     <Modal onClose={handleLoginClose}>
-      <AuthForm isModal={true} />
+      <AuthForm isModal={true} handleLoginClose={handleLoginClose} />
     </Modal>
   ) : null;
 
-  return { runWithAuth, Login, loading };
+  return { runWithAuth, Login, loading, user };
 };

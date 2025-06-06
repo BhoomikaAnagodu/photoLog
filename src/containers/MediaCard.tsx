@@ -1,20 +1,20 @@
 import Like from "../assets/icons/like.svg?react";
 import { useAuthCheckAction } from "../hooks/useAuthCheckAction";
 import useMediaCardAction from "../hooks/useMediaCardAction";
+import type { ImageType } from "../utils/type";
 
 interface MediaCardProps {
-  imgData: {
-    alt_description: string;
-    urls: {
-      small: string;
-    };
-  };
+  imgData: ImageType;
 }
 
 const MediaCard = (props: MediaCardProps) => {
   const { urls, alt_description } = props.imgData;
-  const { Login, runWithAuth } = useAuthCheckAction();
-  const { handleLike } = useMediaCardAction({ runWithAuth });
+  const { Login, runWithAuth, user } = useAuthCheckAction();
+  const { handleLike, isLiked } = useMediaCardAction({
+    runWithAuth,
+    imageData: props.imgData,
+    user,
+  });
 
   return (
     <div className="mb-4 relative hover:[&>div]:visible">
@@ -28,9 +28,15 @@ const MediaCard = (props: MediaCardProps) => {
         <div className="flex gap-2 absolute top-4 right-2">
           <div
             onClick={handleLike}
-            className="bg-gray-200 px-2 py-1 rounded-sm hover:[&>svg]:fill-gray-950 hover:bg-gray-50"
+            className={`bg-gray-200 px-2 py-1 ${
+              isLiked ? "" : "hover:[&>svg>path]:fill-gray-950"
+            }  rounded-sm hover:bg-gray-50`}
           >
-            <Like className="w-4 h-4 fill-gray-500" />
+            <Like
+              className={`w-4 h-4 ${
+                isLiked ? "[&>path]:fill-red-500" : "[&>path]:fill-gray-500"
+              }`}
+            />
           </div>
           {/* TODO: Add to collection functionality */}
           {/* <div className="bg-gray-200 px-2 py-1 rounded-sm hover:[&>svg]:fill-gray-950 hover:bg-gray-50">

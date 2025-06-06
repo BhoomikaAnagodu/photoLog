@@ -35,14 +35,16 @@ export interface AuthFormSchema {
   confirmPassword?: InputFieldType;
 }
 
-export type AuthAction = () => void | Promise<void>;
+export type AuthAction = (user: User) => void | Promise<void>;
 
 export interface ImageType {
   id: string;
   alt_description: string;
-  description: string | null;
+  description?: string | null;
   urls: { small: string; regular: string };
   user: { name: string };
+  likedAt?: Date;
+  createdAt?: Date;
 }
 
 export interface AppContextType {

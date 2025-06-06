@@ -1,7 +1,3 @@
-import { signOut } from "firebase/auth";
-import auth from "../services/auth";
-import type { SnackBarType } from "./type";
-
 export const clearSessionStorage = () => {
   sessionStorage.clear();
 };
@@ -20,19 +16,6 @@ export const handleAuthErrors = (code: string): string => {
       return "Network error! Please check your internet connection and try again.";
     default:
       return "An unexpected error occurred. Please try again.";
-  }
-};
-
-export const logout = async (): Promise<SnackBarType> => {
-  try {
-    await signOut(auth);
-    clearSessionStorage(); // Clear any stored session data
-    return { type: "success", message: "Succefully Logout" };
-  } catch {
-    return {
-      type: "error",
-      message: "Error signing out. Please try again later",
-    };
   }
 };
 

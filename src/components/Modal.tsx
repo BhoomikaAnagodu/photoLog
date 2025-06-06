@@ -1,12 +1,14 @@
+import type { User } from "firebase/auth";
+
 interface ModalProps {
   children: React.ReactNode;
-  onClose: () => Promise<void>;
+  onClose: (user: User | null) => Promise<void>;
 }
 
 const Modal = ({ children, onClose }: ModalProps) => {
   return (
     <div
-      onClick={onClose}
+      onClick={() => onClose(null)}
       className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-[999]"
     >
       <div
