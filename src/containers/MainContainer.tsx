@@ -3,21 +3,24 @@ import Header from "./Header";
 import { SnackBarProvider } from "../context/SnackBarContext";
 import { AuthProvider } from "../context/AuthContext";
 import { AppContextProvider } from "../context/AppContext";
+import { LoaderProvider } from "../context/LoaderContext";
 
 const MainContainer = () => {
   return (
-    <SnackBarProvider>
-      <AuthProvider>
-        <AppContextProvider>
-          <div className="relative w-full">
-            <Header />
-            <div className="aspect-auto w-11/12 lg:w-5/6 mx-auto">
-              <Outlet />
+    <LoaderProvider>
+      <SnackBarProvider>
+        <AuthProvider>
+          <AppContextProvider>
+            <div className="relative w-full">
+              <Header />
+              <div className="aspect-auto w-11/12 lg:w-5/6 mx-auto">
+                <Outlet />
+              </div>
             </div>
-          </div>
-        </AppContextProvider>
-      </AuthProvider>
-    </SnackBarProvider>
+          </AppContextProvider>
+        </AuthProvider>
+      </SnackBarProvider>
+    </LoaderProvider>
   );
 };
 
