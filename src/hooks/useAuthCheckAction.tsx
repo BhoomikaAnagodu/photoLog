@@ -42,7 +42,7 @@ export const useAuthCheckAction = () => {
   };
 
   const Login = showLogin ? (
-    <Modal onClose={handleLoginClose}>
+    <Modal onClose={() => handleLoginClose(user)}>
       <AuthForm isModal={true} handleLoginClose={handleLoginClose} />
     </Modal>
   ) : null;

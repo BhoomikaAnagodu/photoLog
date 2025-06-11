@@ -3,6 +3,8 @@ import type { Dispatch, SetStateAction } from "react";
 
 export interface AuthContextType {
   user: User | null;
+  collections: CollectionType[];
+  handleGetUserCollections: () => void;
 }
 
 export interface SnackBarType {
@@ -55,4 +57,9 @@ export interface AppContextType {
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isFetching: boolean;
   setIsFetching: Dispatch<SetStateAction<boolean>>;
+}
+
+export interface CollectionType {
+  id: string;
+  images: ImageType[];
 }

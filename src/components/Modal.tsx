@@ -1,20 +1,53 @@
-import type { User } from "firebase/auth";
+import { useEffect, useRef } from "react";
+import Close from "../assets/icons/close.svg";
 
 interface ModalProps {
   children: React.ReactNode;
-  onClose: (user: User | null) => Promise<void>;
+  onClose: (() => Promise<void>) | (() => void);
 }
 
 const Modal = ({ children, onClose }: ModalProps) => {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        modalRef.current &&
+        !modalRef.current.contains(event.target as Node)
+      ) {
+        console.log("Close Modal");
+
+        onClose();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [onClose]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
-    <div
-      onClick={() => onClose(null)}
-      className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-[999]"
-    >
+    <div className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-130">
       <div
-        onClick={(e) => e.stopPropagation()}
+        ref={modalRef}
         className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm"
       >
+        <img
+          src={Close}
+          className="w-4 h-4 absolute right-5 top-5 cursor-pointer"
+          onClick={onClose}
+          alt="Close modal"
+        />
         {children}
       </div>
     </div>
