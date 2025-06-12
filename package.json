@@ -9,6 +9,10 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BhoomikaAnagodu/photoLog.git"
+  },
   "dependencies": {
     "firebase": "^11.8.1",
     "react": "^19.1.0",
