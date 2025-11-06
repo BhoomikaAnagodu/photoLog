@@ -30,7 +30,7 @@ const InputField = ({
       {label && (
         <label
           htmlFor={id}
-          className="block font-semibold text-sm text-gray-700 my-2"
+          className="block font-semibold text-xs text-gray-700 my-2"
         >
           {label}
         </label>
@@ -43,8 +43,8 @@ const InputField = ({
           onChange={onChange}
           placeholder={placeholder}
           autoComplete="off"
-          className={`w-full border px-3 py-2 rounded focus:shadow-outline outline-theme-lilac focus:ring ${
-            error ? "border-red-500" : "border-gray-300"
+          className={`w-full border px-3 py-2 text-sm rounded focus:shadow-outline outline-theme-lilac placeholder:text-slate-300 focus:ring ${
+            error ? "border-red-500" : "border-slate-300"
           }`}
           aria-invalid={!!error}
           aria-describedby={error ? `${id}-error` : undefined}

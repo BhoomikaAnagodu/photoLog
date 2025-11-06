@@ -44,11 +44,13 @@ const useHeader = () => {
       await logoutUser();
       clearSessionStorage(); // Clear any stored session data
       setSnackbar({ type: "success", message: "Succefully Logout" });
-      if (location.pathname === "/") {
-        window.location.reload();
-      } else {
-        navigate("/");
-      }
+      setTimeout(() => {
+        if (location.pathname === "/") {
+          window.location.reload();
+        } else {
+          navigate("/");
+        }
+      }, 1000);
     } catch (err) {
       const error = err as Error;
       setSnackbar({

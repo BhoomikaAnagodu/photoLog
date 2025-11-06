@@ -4,9 +4,10 @@ import Close from "../assets/icons/close.svg";
 interface ModalProps {
   children: React.ReactNode;
   onClose: (() => Promise<void>) | (() => void);
+  showCloseIcon: boolean;
 }
 
-const Modal = ({ children, onClose }: ModalProps) => {
+const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -42,12 +43,14 @@ const Modal = ({ children, onClose }: ModalProps) => {
         ref={modalRef}
         className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm"
       >
-        <img
-          src={Close}
-          className="w-4 h-4 absolute right-5 top-5 cursor-pointer"
-          onClick={onClose}
-          alt="Close modal"
-        />
+        {showCloseIcon && (
+          <img
+            src={Close}
+            className="w-4 h-4 absolute right-5 top-5 cursor-pointer"
+            onClick={onClose}
+            alt="Close modal"
+          />
+        )}
         {children}
       </div>
     </div>

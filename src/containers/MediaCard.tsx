@@ -23,11 +23,12 @@ const MediaCard = (props: MediaCardProps) => {
     openCollectionModal,
     toggleCollectionModal,
     handleAddImgToCollection,
-    setAddCollectionName,
-    showAddCollectionName,
+    setCreateCollectionName,
+    showCreateCollectionName,
     collectionsList,
     collectionName,
     setCollectionName,
+    handleDisLike,
   } = useMediaCardAction({
     runWithAuth,
     imageData: props.imgData,
@@ -45,7 +46,7 @@ const MediaCard = (props: MediaCardProps) => {
       <div className="invisible cursor-pointer absolute p-4 top-0 w-full h-full bg-black/30 rounded-2xl">
         <div className="flex gap-2 absolute top-4 right-2">
           <div
-            onClick={handleLike}
+            onClick={isLiked ? handleDisLike : handleLike}
             className={`bg-gray-200 px-2 py-1 ${
               isLiked ? "" : "hover:[&>svg>path]:fill-gray-950"
             }  rounded-sm hover:bg-gray-50`}
@@ -68,18 +69,18 @@ const MediaCard = (props: MediaCardProps) => {
       </div>
       {Login}
       {openCollectionModal && (
-        <Modal onClose={toggleCollectionModal}>
+        <Modal onClose={toggleCollectionModal} showCloseIcon={false}>
           <div className="w-full mx-auto text-center p-3">
-            {showAddCollectionName ? (
+            {showCreateCollectionName ? (
               <>
                 <div className="flex items-center justify-between">
                   <Back
                     className="w-5 h-5 cursor-pointer"
-                    onClick={() => setAddCollectionName(false)}
+                    onClick={() => setCreateCollectionName(false)}
                   />
                   <p>Create Collection</p>
                   <Close
-                    className="w-5 h-5 cursor-pointer"
+                    className="w-4 h-4 cursor-pointer"
                     onClick={toggleCollectionModal}
                   />
                 </div>
@@ -106,7 +107,7 @@ const MediaCard = (props: MediaCardProps) => {
                   <p></p>
                   <p>Add to Collection</p>
                   <Close
-                    className="w-5 h-5 cursor-pointer"
+                    className="w-4 h-4 cursor-pointer"
                     onClick={toggleCollectionModal}
                   />
                 </div>
@@ -127,7 +128,7 @@ const MediaCard = (props: MediaCardProps) => {
                   </div>
                   <button className="cursor-pointer flex items-center justify-center mx-auto bg-theme-lilac-100 rounded-md py-2 px-4 mt-5">
                     <AddToCollection className="w-4 h-4 mr-2" />
-                    <p onClick={() => setAddCollectionName(true)}>
+                    <p onClick={() => setCreateCollectionName(true)}>
                       Create Collection
                     </p>
                   </button>

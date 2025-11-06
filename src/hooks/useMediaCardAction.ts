@@ -3,6 +3,7 @@ import {
   addImageToCollection,
   isImageLiked,
   likeImage,
+  disLikeImage,
 } from "../networks/user";
 import type { AuthAction, ImageType } from "../utils/type";
 import type { User } from "firebase/auth";
@@ -31,7 +32,7 @@ const useMediaCardAction = ({
     useState<boolean>(false);
   const [isAddedToCollection, setIsAddedToCollection] =
     useState<boolean>(false);
-  const [showAddCollectionName, setAddCollectionName] =
+  const [showCreateCollectionName, setCreateCollectionName] =
     useState<boolean>(false);
   const [collectionsList, setCollectionsList] = useState<string[]>([]);
   const [collectionName, setCollectionName] = useState<string>("");
@@ -47,13 +48,35 @@ const useMediaCardAction = ({
         setIsLiked(true);
         setSnackbar({
           type: "success",
-          message: "Liked Image!",
+          message: "Liked an Image!",
         });
       } catch (err) {
         const error = err as Error;
         setSnackbar({
           type: "error",
-          message: error?.message || "Failed to like image",
+          message: error?.message || "Failed to like an image",
+        });
+      } finally {
+        setLoading(false);
+      }
+    });
+  };
+
+  const handleDisLike = () => {
+    runWithAuth(async (user) => {
+      try {
+        setLoading(true);
+        await disLikeImage(user.uid, id);
+        setIsLiked(false);
+        setSnackbar({
+          type: "success",
+          message: "disLiked an Image!",
+        });
+      } catch (err) {
+        const error = err as Error;
+        setSnackbar({
+          type: "error",
+          message: error?.message || "Failed to like an image",
         });
       } finally {
         setLoading(false);
@@ -135,11 +158,12 @@ const useMediaCardAction = ({
     openCollectionModal,
     toggleCollectionModal,
     handleAddImgToCollection,
-    showAddCollectionName,
-    setAddCollectionName,
+    showCreateCollectionName,
+    setCreateCollectionName,
     collectionsList,
     collectionName,
     setCollectionName,
+    handleDisLike,
   };
 };
 

@@ -36,7 +36,9 @@ const AuthForm = ({
       }`}
     >
       <div
-        className={`${isModal ? "w-full" : "w-full md:w-4/6 lg:w-3/6"} mx-auto p-5`}
+        className={`${
+          isModal ? "w-full" : "w-full md:w-4/6 lg:w-5/12"
+        } mx-auto p-5`}
       >
         <form onSubmit={handleSubmit}>
           <h1 className="text-2xl md:text-3xl text-gray-700 text-center py-1 font-bold tracking-wide">
@@ -61,7 +63,7 @@ const AuthForm = ({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-theme-lilac disabled:bg-stone-300 px-14 cursor-pointer py-2 rounded-3xl text-stone-50 hover:bg-theme-lilac-900 font-semibold tracking-wide"
+              className="bg-theme-lilac disabled:bg-stone-300 px-32 cursor-pointer py-2 rounded-3xl text-stone-50 hover:bg-theme-lilac-900 font-semibold tracking-wide"
             >
               {showSignupForm ? "Sign up" : "Login"}
             </button>

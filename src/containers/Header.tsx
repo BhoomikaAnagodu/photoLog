@@ -8,8 +8,14 @@ import useHeader from "../hooks/useHeader";
 import SearchComponent from "./SearchComponent";
 
 const Header = () => {
-  const { handleLogout, toggleMenu, accountRef, isAccMenuVisible, user } =
-    useHeader();
+  const {
+    handleLogout,
+    toggleMenu,
+    accountRef,
+    isAccMenuVisible,
+    user,
+    location,
+  } = useHeader();
   return (
     <>
       <div className="fixed z-1 top-0 left-0 right-0 shadow bg-white">
@@ -19,7 +25,7 @@ const Header = () => {
               <Logo className="w-12 h-10" />
             </NavLink>
           </div>
-          <SearchComponent />
+          {location.pathname === "/" && <SearchComponent />}
           <div>
             <ul>
               {user ? (

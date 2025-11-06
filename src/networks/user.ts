@@ -1,5 +1,12 @@
 import { updateProfile, type User } from "firebase/auth";
-import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 
 import db from "../services/db";
 
@@ -26,7 +33,17 @@ export const likeImage = async (
     const likeDocRef = doc(db, "users", userId, "likes", imageId);
     await setDoc(likeDocRef, imageData);
   } catch (error) {
-    console.error("Error liking image:", error);
+    console.error("Error liking an image:", error);
+    throw error;
+  }
+};
+
+export const disLikeImage = async (userId: string, imageId: string) => {
+  try {
+    const likeDocRef = doc(db, "users", userId, "likes", imageId);
+    await deleteDoc(likeDocRef);
+  } catch (error) {
+    console.error("Error disliking an image:", error);
     throw error;
   }
 };
