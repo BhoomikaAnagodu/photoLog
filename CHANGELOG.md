@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.0.0...v1.1.0) (2025-11-06)
+
+
+### Features
+
+* add dislike functionality and improve styling in authform ([4a7d6be](https://github.com/BhoomikaAnagodu/photoLog/commit/4a7d6be8bf54a5d0071f0ba7a329a6abeff31a6e))
+
 # 1.0.0 (2025-06-12)
 
 
