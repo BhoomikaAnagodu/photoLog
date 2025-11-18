@@ -4,7 +4,7 @@ import {
   signOut,
   type UserCredential,
 } from "firebase/auth";
-import auth from "../services/auth";
+import { auth } from "../firebase";
 
 export const registerUser = (
   email: string,

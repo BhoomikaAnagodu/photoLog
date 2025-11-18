@@ -4,7 +4,7 @@ import Close from "../assets/icons/close.svg";
 interface ModalProps {
   children: React.ReactNode;
   onClose: (() => Promise<void>) | (() => void);
-  showCloseIcon: boolean;
+  showCloseIcon?: boolean;
 }
 
 const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
@@ -16,8 +16,6 @@ const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
         modalRef.current &&
         !modalRef.current.contains(event.target as Node)
       ) {
-        console.log("Close Modal");
-
         onClose();
       }
     };

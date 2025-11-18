@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import type { AuthContextType, CollectionType } from "../utils/type";
 import { onAuthStateChanged, type User } from "firebase/auth";
 import { clearSessionStorage } from "../utils/utils";
-import auth from "../services/auth";
+import { auth } from "../firebase";
 import { getUserCollections } from "../networks/user";
 
 const initialState: AuthContextType = {

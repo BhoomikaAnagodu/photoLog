@@ -8,9 +8,11 @@ import {
   setDoc,
 } from "firebase/firestore";
 
-import db from "../services/db";
+import { db, storage } from "../firebase";
 
 import type { CollectionType, ImageType } from "../utils/type";
+import { base64toBlob } from "../utils/utils";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 export const updateUserProfile = async (
   user: User,
@@ -140,6 +142,27 @@ export const getUserCollections = async (
     return collections;
   } catch (error) {
     console.error("Error fetching collection details:", error);
+    throw error;
+  }
+};
+
+export const uploadProfilePicture = async (
+  user: User,
+  imageUrl: string
+): Promise<void> => {
+  const blob = base64toBlob(imageUrl);
+  const storageRef = ref(storage, `profilePictures/${user?.uid}.png`);
+  try {
+    // Upload image to Storage
+    await uploadBytes(storageRef, blob);
+
+    // Get URL
+    const photoURL = await getDownloadURL(storageRef);
+
+    // Update Firebase Auth user profile
+    await updateProfile(user, { photoURL });
+  } catch (error) {
+    console.error("Upload failed:", error);
     throw error;
   }
 };
