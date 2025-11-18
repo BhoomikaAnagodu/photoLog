@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.1.0...v1.2.0) (2025-11-18)
+
+
+### Features
+
+* implement profile picture upload ([e6fb87c](https://github.com/BhoomikaAnagodu/photoLog/commit/e6fb87ca9e519a46ef974d95caf3dfbff44d2393))
+
 # [1.1.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.0.0...v1.1.0) (2025-11-06)
 
 
