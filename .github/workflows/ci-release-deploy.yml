@@ -59,7 +59,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: site-dist
-          path: ./dist-artifact
+          path: ./dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -98,5 +98,4 @@ jobs:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
         run: |
-          # Use the CLI to do a production deploy from the dist folder
-          npx netlify deploy --dir=./dist --prod --auth="$NETLIFY_AUTH_TOKEN" --site="$NETLIFY_SITE_ID"
+          npx netlify deploy --dir=./dist --prod --auth="$NETLIFY_AUTH_TOKEN" --site="$NETLIFY_SITE_ID" --no-build
