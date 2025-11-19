@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.2.0...v1.2.1) (2025-11-19)
+
+
+### Bug Fixes
+
+* revert semantic-release package version ([3572a48](https://github.com/BhoomikaAnagodu/photoLog/commit/3572a4801a261c37cf2e0b8c37ab02cac49378cd))
+
 # [1.2.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.1.0...v1.2.0) (2025-11-18)
 
 
