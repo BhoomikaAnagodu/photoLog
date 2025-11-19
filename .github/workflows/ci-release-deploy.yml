@@ -58,8 +58,8 @@ jobs:
 
       - name: Ensure branch is main
         run: |
-        git checkout main
-        git reset --hard origin/main
+          git checkout main
+          git reset --hard origin/main
 
       - name: Download dist artifact
         uses: actions/download-artifact@v4
