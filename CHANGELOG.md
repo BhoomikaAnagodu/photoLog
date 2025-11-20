@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.3.1...v1.3.2) (2025-11-20)
+
+
+### Bug Fixes
+
+* **ci:** add missing env variables in yml file ([0ba1fd8](https://github.com/BhoomikaAnagodu/photoLog/commit/0ba1fd8ad1494f4f1535266bf37d5c7eb909b8ab))
+
 ## [1.3.1](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.3.0...v1.3.1) (2025-11-20)
 
 
