@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.2.1...v1.3.0) (2025-11-20)
+
+
+### Features
+
+* **profile:** integrate collections in profile view ([7b84786](https://github.com/BhoomikaAnagodu/photoLog/commit/7b84786a7a4b6fca9a8ab78ec6825b072ca74929))
+
 ## [1.2.1](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.2.0...v1.2.1) (2025-11-19)
 
 
