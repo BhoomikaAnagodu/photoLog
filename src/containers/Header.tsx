@@ -30,10 +30,19 @@ const Header = () => {
             <ul>
               {user ? (
                 <li className="relative" ref={accountRef}>
-                  <Account
-                    className="w-6 h-6 cursor-pointer"
-                    onClick={toggleMenu}
-                  />
+                  {user && user?.photoURL ? (
+                    <img
+                      src={user && user?.photoURL}
+                      className="w-6 h-6 rounded-full cursor-pointer"
+                      alt="profile picture"
+                      onClick={toggleMenu}
+                    />
+                  ) : (
+                    <Account
+                      className="w-6 h-6 cursor-pointer"
+                      onClick={toggleMenu}
+                    />
+                  )}
                   {isAccMenuVisible && (
                     <div className="shadow-[0px_0px_90px_10px_rgba(0,_0,_0,_0.1)] rounded-md z-[1100] bg-white absolute top-7 right-0">
                       <ul>

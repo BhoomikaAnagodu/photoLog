@@ -36,7 +36,7 @@ const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
   }, []);
 
   return (
-    <div className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-130">
+    <div className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-[1100]">
       <div
         ref={modalRef}
         className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm"

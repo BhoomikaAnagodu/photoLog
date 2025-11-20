@@ -51,3 +51,7 @@ export const base64toBlob = (base64: string) => {
 
   return new Blob([ab], { type: mimeString });
 };
+
+export const capitalizeFirstLetter = (word: string) => {
+  return word.charAt(0).toUpperCase() + word.slice(1);
+};

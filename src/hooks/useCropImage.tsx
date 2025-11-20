@@ -26,8 +26,8 @@ const useCropImage = ({ imageSrc, setOpenModal, runWithAuth }: Props) => {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
   const [croppedImage, setCroppedImage] = useState<string | null>(null);
 
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [crop, setCrop] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState<number>(1);
   const { setSnackbar } = useSnackbar();
   const { setLoading } = useLoader();
 

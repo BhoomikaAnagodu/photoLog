@@ -17,7 +17,7 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="my-5 pt-15">
+      <div className="my-5">
         {isFetching && list.length === 0 && (
           <div className="columns-4 gap-4 my-6">
             {Array.from({ length: 8 }).map((_, idx) => (
