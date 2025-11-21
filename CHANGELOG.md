@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.3.2...v1.4.0) (2025-11-21)
+
+
+### Features
+
+* **profile:** integrate liked images section in profile view ([187edb1](https://github.com/BhoomikaAnagodu/photoLog/commit/187edb10cabfaffaac5f497dd3b4ab5236a6a7ff))
+
 ## [1.3.2](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.3.1...v1.3.2) (2025-11-20)
 
 
