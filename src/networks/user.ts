@@ -166,3 +166,22 @@ export const uploadProfilePicture = async (
     throw error;
   }
 };
+
+export const getUserLikedImages = async (
+  userId: string
+): Promise<ImageType[]> => {
+  try {
+    const likesRef = collection(db, "users", userId, "likes");
+    const likesSnapshot = await getDocs(likesRef);
+
+    const likedImages = likesSnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as ImageType[];
+
+    return likedImages;
+  } catch (error) {
+    console.error("Error fetching liked images:", error);
+    throw error;
+  }
+};

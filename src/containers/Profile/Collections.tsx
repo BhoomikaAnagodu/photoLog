@@ -1,8 +1,17 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
-import type { CollectionType } from "../utils/type";
-import { capitalizeFirstLetter } from "../utils/utils";
-import Back from "../assets/icons/back.svg?react";
+import { useAuth } from "../../context/AuthContext";
+import type { CollectionType } from "../../utils/type";
+import { capitalizeFirstLetter } from "../../utils/utils";
+import Back from "../../assets/icons/back.svg?react";
+import MediaCard from "../MediaCard";
+import Masonry from "react-masonry-css";
+
+const breakpointColumnsObj = {
+  default: 3,
+  1024: 4,
+  768: 3,
+  480: 2,
+};
 
 const Collections = () => {
   const { collections } = useAuth();
@@ -12,6 +21,7 @@ const Collections = () => {
 
   return (
     <div>
+      {/* Display Images in a Collection */}
       {showCollection ? (
         <div className="h-fit">
           <button
@@ -24,19 +34,19 @@ const Collections = () => {
             <h2 className="text-lg font-semibold">
               {capitalizeFirstLetter(showCollection.id)}
             </h2>
-            <div className="grid grid-cols-3 gap-4 pt-2">
-              {showCollection.images.map((img) => (
-                <img
-                  key={img.id}
-                  src={img.urls?.small}
-                  alt={img.alt_description}
-                  className="rounded-md object-cover w-full h-75"
-                />
+            <Masonry
+              breakpointCols={breakpointColumnsObj}
+              className="flex gap-4"
+              columnClassName="masonry-column"
+            >
+              {showCollection.images.map((item, index) => (
+                <MediaCard key={`${item.id}_${index}`} imgData={item} />
               ))}
-            </div>
+            </Masonry>
           </div>
         </div>
       ) : (
+        /* Display All Collections */
         <div>
           {collections.length > 0 && (
             <div className="grid grid-cols-3 gap-4">

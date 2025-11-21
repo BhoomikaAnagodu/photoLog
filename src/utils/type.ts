@@ -4,6 +4,7 @@ import type { Dispatch, SetStateAction } from "react";
 export interface AuthContextType {
   user: User | null;
   collections: CollectionType[];
+  likedImages: ImageType[];
   handleGetUserCollections: () => void;
 }
 

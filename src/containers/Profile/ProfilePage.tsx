@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useAuthCheckAction } from "../../hooks/useAuthCheckAction";
-import Collections from "../Collections";
+import Collections from "./Collections";
 import { capitalizeFirstLetter } from "../../utils/utils";
 import ProfilePicture from "./ProfilePicture";
 import useCropImage from "../../hooks/useCropImage";
 import Modal from "../../components/Modal";
 import Cropper from "react-easy-crop";
+import LikedImages from "./LikedImages";
 
 const Tabs = ["collections", "likes"];
 
@@ -35,7 +36,7 @@ const ProfilePage = () => {
         return <Collections />;
         break;
       case "likes":
-        return <div>Likes</div>;
+        return <LikedImages />;
         break;
       default:
         return null;
