@@ -36,7 +36,7 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
   });
 
   return (
-    <div className="mb-4 relative hover:[&>div]:visible">
+    <div className="relative hover:[&>div]:visible">
       <img
         src={urls?.small}
         alt={alt_description}

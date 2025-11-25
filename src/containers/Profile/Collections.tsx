@@ -1,17 +1,10 @@
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import { useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import type { CollectionType } from "../../utils/type";
 import { capitalizeFirstLetter } from "../../utils/utils";
 import Back from "../../assets/icons/back.svg?react";
 import MediaCard from "../MediaCard";
-import Masonry from "react-masonry-css";
-
-const breakpointColumnsObj = {
-  default: 3,
-  1024: 4,
-  768: 3,
-  480: 2,
-};
 
 const Collections = () => {
   const { collections } = useAuth();
@@ -34,15 +27,15 @@ const Collections = () => {
             <h2 className="text-lg font-semibold">
               {capitalizeFirstLetter(showCollection.id)}
             </h2>
-            <Masonry
-              breakpointCols={breakpointColumnsObj}
-              className="flex gap-4"
-              columnClassName="masonry-column"
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4, 900: 5 }}
             >
-              {showCollection.images.map((item, index) => (
-                <MediaCard key={`${item.id}_${index}`} imgData={item} />
-              ))}
-            </Masonry>
+              <Masonry gutter="20px">
+                {showCollection.images.map((item, index) => (
+                  <MediaCard key={`${item.id}_${index}`} imgData={item} />
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
           </div>
         </div>
       ) : (

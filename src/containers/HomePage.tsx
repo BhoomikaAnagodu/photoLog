@@ -1,19 +1,12 @@
-import Masonry from "react-masonry-css";
-import useHomePage from "../hooks/useHomePage";
-
-import NoResultFound_Img from "../assets/images/no_result_found.jpg";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import MediaCard from "./MediaCard";
-
-const breakpointColumnsObj = {
-  default: 5,
-  1024: 4,
-  768: 3,
-  480: 2,
-};
+import useHomePage from "../hooks/useHomePage";
+import NoResultFound_Img from "../assets/images/no_result_found.jpg";
 
 const HomePage = () => {
-  const { list, isFetching } = useHomePage();
+  const { list, isFetching, hasMore, loadMore } = useHomePage();
 
   return (
     <>
@@ -30,15 +23,22 @@ const HomePage = () => {
         )}
 
         {!isFetching && list.length > 0 && (
-          <Masonry
-            breakpointCols={breakpointColumnsObj}
-            className="flex gap-4"
-            columnClassName="masonry-column"
+          <InfiniteScroll
+            dataLength={list.length}
+            next={loadMore}
+            hasMore={hasMore}
+            loader={null}
           >
-            {list.map((item, index) => (
-              <MediaCard key={`${item.id}_${index}`} imgData={item} />
-            ))}
-          </Masonry>
+            <ResponsiveMasonry
+              columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4, 900: 5 }}
+            >
+              <Masonry gutter="20px">
+                {list.map((item, index) => (
+                  <MediaCard key={`${item.id}_${index}`} imgData={item} />
+                ))}
+              </Masonry>
+            </ResponsiveMasonry>
+          </InfiniteScroll>
         )}
 
         {!isFetching && list.length === 0 && (

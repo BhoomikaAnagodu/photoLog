@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { debounce } from "../utils/utils";
 import {
   BASE_API_URL,
@@ -10,83 +10,72 @@ import { useSnackbar } from "../context/SnackBarContext";
 import { useAppContext } from "../context/AppContext";
 
 const useHomePage = () => {
-  const {
-    list,
-    setList,
-    searchQuery,
-    handleChange,
-    isFetching,
-    setIsFetching,
-  } = useAppContext();
+  const { list, setList, searchQuery, isFetching, setIsFetching } =
+    useAppContext();
 
   const [page, setPage] = useState<number>(1);
-  const [searchResultFound, setSearchResultFound] = useState<boolean>(false);
-  const mountedRef = useRef(false);
+  const [hasMore, setHasMore] = useState<boolean>(false);
   const { setSnackbar } = useSnackbar();
+  const PER_PAGE = 30;
 
-  const getList = async (query: string, newSearch: boolean = false) => {
-    try {
-      const encodedQuery = encodeURIComponent(query);
-      const url = `${BASE_API_URL}search/photos?client_id=${UNSPLASH_CLIENT_ID}&page=${page}&query=${encodedQuery}&per_page=30`;
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-      const data = await res.json();
-      setSearchResultFound(!!data?.results?.length || false);
-      setList((list) => {
-        return newSearch ? [...data.results] : [...list, ...data.results];
-      });
-    } catch (err) {
-      const error = err as Error;
-      setSnackbar({
-        type: "error",
-        message:
-          error?.message || "Something went wrong while fetching images.",
-      });
-    } finally {
-      setIsFetching(false);
-    }
-  };
+  const getList = useCallback(
+    async (
+      query: string,
+      newSearch: boolean = false,
+      pageOverride?: number
+    ) => {
+      try {
+        const currentPage = pageOverride ?? page;
+        const encodedQuery = encodeURIComponent(query);
+        const url = `${BASE_API_URL}search/photos?client_id=${UNSPLASH_CLIENT_ID}&page=${currentPage}&query=${encodedQuery}&per_page=${PER_PAGE}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+        const data = await res.json();
+        const hasMore = currentPage < data?.total_pages;
+        setHasMore(hasMore);
+        setList((list) => {
+          return newSearch ? [...data.results] : [...list, ...data.results];
+        });
+      } catch (err) {
+        const error = err as Error;
+        setSnackbar({
+          type: "error",
+          message:
+            error?.message || "Something went wrong while fetching images.",
+        });
+      } finally {
+        setIsFetching(false);
+      }
+    },
+    [setList, setIsFetching, setSnackbar]
+  );
 
-  const handleScroll = debounce(() => {
-    const bottom =
-      window.scrollY + window.innerHeight >=
-      document.documentElement.scrollHeight - 900;
+  const loadMore = useCallback(async () => {
+    if (isFetching || !hasMore) return;
 
-    if (bottom) {
-      setPage((prev) => prev + 1);
-    }
-  }, 100);
+    const nextPage = page + 1;
+    setPage(nextPage);
+    await getList(searchQuery || RANDOM_SEARCH_QUERY, false, nextPage);
+  }, [page, isFetching, hasMore, searchQuery, getList]);
 
-  useEffect(() => {
-    if (page > 1 && searchResultFound) {
-      getList(searchQuery || RANDOM_SEARCH_QUERY);
-    }
-  }, [page, searchResultFound]);
-
-  useEffect(() => {
-    if (!mountedRef.current) {
-      getList(RANDOM_SEARCH_QUERY);
-      mountedRef.current = true;
-    }
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
-
-  const debounceOnChange = useCallback(debounce(getList, 800), []);
+  const debounceOnChange = useCallback(
+    debounce((query: string, newSearch: boolean, pageOverride: number) => {
+      getList(query, newSearch, pageOverride);
+    }, 800),
+    [getList]
+  );
 
   useEffect(() => {
     setIsFetching(true);
     setPage(1);
-    debounceOnChange(searchQuery || "random", true);
+    debounceOnChange(searchQuery || RANDOM_SEARCH_QUERY, true, 1);
   }, [searchQuery]);
 
   return {
     list,
-    searchQuery,
     isFetching,
-    handleChange,
+    hasMore,
+    loadMore,
   };
 };
 
