@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 # Give workflows the minimal permissions needed (semantic-release will create releases & tags)
 permissions:
