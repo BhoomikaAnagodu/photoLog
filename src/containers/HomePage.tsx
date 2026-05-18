@@ -6,12 +6,13 @@ import useHomePage from "../hooks/useHomePage";
 import NoResultFound_Img from "../assets/images/no_result_found.jpg";
 
 const HomePage = () => {
-  const { list, isFetching, hasMore, loadMore } = useHomePage();
+  const { list, isFetching, isFetchingNextPage, hasMore, loadMore } =
+    useHomePage();
 
   return (
     <>
       <div className="my-5">
-        {isFetching && list.length === 0 && (
+        {isFetching && !isFetchingNextPage && list.length === 0 && (
           <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 my-6">
             {Array.from({ length: 15 }).map((_, idx) => (
               <div key={idx} className="mb-5 break-inside-avoid">
@@ -24,7 +25,7 @@ const HomePage = () => {
           </div>
         )}
 
-        {!isFetching && list.length > 0 && (
+        {list.length > 0 && (
           <InfiniteScroll
             dataLength={list.length}
             next={loadMore}

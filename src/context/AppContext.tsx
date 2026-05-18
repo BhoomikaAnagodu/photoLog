@@ -1,11 +1,10 @@
 import { createContext, useContext, useState } from "react";
-import type { AppContextType, ImageType } from "../utils/type";
+import type { AppContextType } from "../utils/type";
+import { debounce } from "../utils/utils";
 
 const initialState: AppContextType = {
-  list: [],
-  setList: () => {},
+  inputValue: "",
   searchQuery: "",
-  setSearchQuery: () => {},
   handleChange: () => {},
   isFetching: false,
   setIsFetching: () => {},
@@ -13,29 +12,32 @@ const initialState: AppContextType = {
 
 const AppContext = createContext(initialState);
 
+const debouncedSetSearch = debounce(
+  (setter: (value: string) => void, value: string) => setter(value),
+  600,
+);
+
 export const AppContextProvider = ({
   children,
 }: {
   children: React.ReactNode;
 }) => {
-  const [list, setList] = useState<ImageType[]>([]);
+  const [inputValue, setInputValue] = useState<string>("");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [isFetching, setIsFetching] = useState<boolean>(
-    initialState.isFetching
+    initialState.isFetching,
   );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setSearchQuery(value);
+    setInputValue(e.target.value);
+    debouncedSetSearch(setSearchQuery, e.target.value);
   };
 
   return (
     <AppContext.Provider
       value={{
-        list,
-        setList,
+        inputValue,
         searchQuery,
-        setSearchQuery,
         handleChange,
         isFetching,
         setIsFetching,

@@ -1,6 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useCallback, useEffect, useState } from "react";
-import { debounce } from "../utils/utils";
+import { useEffect } from "react";
+import { useInfiniteQuery } from "@tanstack/react-query";
+
 import {
   BASE_API_URL,
   RANDOM_SEARCH_QUERY,
@@ -8,76 +8,62 @@ import {
 } from "../utils/constant";
 import { useSnackbar } from "../context/SnackBarContext";
 import { useAppContext } from "../context/AppContext";
+import type { ImageType } from "../utils/type";
+
+const PER_PAGE = 30;
+
+const fetchPhotos = async (
+  query: string,
+  page: number,
+): Promise<{
+  results: ImageType[];
+  total_pages: number;
+}> => {
+  const encoded = encodeURIComponent(query);
+  const url = `${BASE_API_URL}search/photos?client_id=${UNSPLASH_CLIENT_ID}&page=${page}&query=${encoded}&per_page=${PER_PAGE}`;
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
+  return res.json();
+};
 
 const useHomePage = () => {
-  const { list, setList, searchQuery, isFetching, setIsFetching } =
-    useAppContext();
-
-  const [page, setPage] = useState<number>(1);
-  const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
-  const [hasMore, setHasMore] = useState<boolean>(false);
+  const { searchQuery, setIsFetching } = useAppContext();
   const { setSnackbar } = useSnackbar();
-  const PER_PAGE = 30;
+  const query = searchQuery || RANDOM_SEARCH_QUERY;
 
-  const getList = useCallback(
-    async (
-      query: string,
-      newSearch: boolean = false,
-      pageOverride?: number,
-    ) => {
-      try {
-        const currentPage = pageOverride ?? page;
-        const encodedQuery = encodeURIComponent(query);
-        const url = `${BASE_API_URL}search/photos?client_id=${UNSPLASH_CLIENT_ID}&page=${currentPage}&query=${encodedQuery}&per_page=${PER_PAGE}`;
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`Error ${res.status}: ${res.statusText}`);
-        const data = await res.json();
-        const hasMore = currentPage < data?.total_pages;
-        setHasMore(hasMore);
-        setList((list) => {
-          return newSearch ? [...data.results] : [...list, ...data.results];
-        });
-      } catch (err) {
-        const error = err as Error;
+  const { data, isFetching, isFetchingNextPage, fetchNextPage, hasNextPage } =
+    useInfiniteQuery({
+      queryKey: ["photos", query],
+      queryFn: ({ pageParam = 1 }) => fetchPhotos(query, pageParam as number),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage, allPages) =>
+        allPages.length < lastPage.total_pages
+          ? allPages.length + 1
+          : undefined,
+      staleTime: 1000 * 60 * 5,
+      throwOnError: (error) => {
         setSnackbar({
           type: "error",
-          message:
-            error?.message || "Something went wrong while fetching images.",
+          message: error.message || "Something went wrong.",
         });
-      } finally {
-        setIsFetching(false);
-      }
-    },
-    [setList, setIsFetching, setSnackbar],
-  );
+        return false;
+      },
+    });
 
-  const loadMore = useCallback(async () => {
-    if (isFetching || isFetchingMore || !hasMore) return;
-    setIsFetchingMore(true);
-    const nextPage = page + 1;
-    setPage(nextPage);
-    await getList(searchQuery || RANDOM_SEARCH_QUERY, false, nextPage);
-    setIsFetchingMore(false);
-  }, [page, isFetching, isFetchingMore, hasMore, searchQuery, getList]);
-
-  const debounceOnChange = useCallback(
-    debounce((query: string, newSearch: boolean, pageOverride: number) => {
-      getList(query, newSearch, pageOverride);
-    }, 800),
-    [getList],
-  );
-
+  // To sync TanStack's isFetching → AppContext so Header can read it
   useEffect(() => {
-    setIsFetching(true);
-    setPage(1);
-    debounceOnChange(searchQuery || RANDOM_SEARCH_QUERY, true, 1);
-  }, [searchQuery]);
+    setIsFetching(isFetching && !isFetchingNextPage);
+  }, [isFetching, setIsFetching, isFetchingNextPage]);
+
+  // flatten all pages into a single list
+  const list = data?.pages.flatMap((page) => page.results) ?? [];
 
   return {
     list,
     isFetching,
-    hasMore,
-    loadMore,
+    isFetchingNextPage,
+    hasMore: !!hasNextPage,
+    loadMore: fetchNextPage,
   };
 };
 

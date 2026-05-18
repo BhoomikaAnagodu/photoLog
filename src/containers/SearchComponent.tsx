@@ -3,7 +3,7 @@ import Loading from "../assets/icons/loading.svg?react";
 import { useAppContext } from "../context/AppContext";
 
 const SearchComponent = () => {
-  const { searchQuery, handleChange, isFetching } = useAppContext();
+  const { inputValue, handleChange, isFetching } = useAppContext();
 
   return (
     <form className="w-4/6 lg:w-2/6 mx-auto">
@@ -20,7 +20,7 @@ const SearchComponent = () => {
           name="searchInput"
           className="block w-full p-2 ps-10 text-sm text-gray-900 border focus:shadow-outline outline-theme-lilac input-search-icon placeholder:text-stone-400 border-gray-300 rounded-lg bg-gray-50 focus:bg-white"
           placeholder="Search Photos, Logos..."
-          value={searchQuery}
+          value={inputValue}
           onChange={handleChange}
           autoComplete="off"
         />

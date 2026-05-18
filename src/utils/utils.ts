@@ -22,15 +22,12 @@ export const handleAuthErrors = (code: string): string => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const debounce = <T extends (...args: any[]) => void>(
   callbackFnc: T,
-  delay: number
+  delay: number,
 ): ((...args: Parameters<T>) => void) => {
   let timeoutId: ReturnType<typeof setTimeout>;
 
   return function (...args: Parameters<T>): void {
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
+    clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       callbackFnc(...args);
     }, delay);

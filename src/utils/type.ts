@@ -53,10 +53,8 @@ export interface ImageType {
 }
 
 export interface AppContextType {
-  list: ImageType[];
-  setList: Dispatch<SetStateAction<ImageType[]>>;
+  inputValue: string;
   searchQuery: string;
-  setSearchQuery: Dispatch<SetStateAction<string>>;
   handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   isFetching: boolean;
   setIsFetching: Dispatch<SetStateAction<boolean>>;
