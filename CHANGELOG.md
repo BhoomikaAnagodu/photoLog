@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.4.0...v1.4.1) (2026-05-18)
+
+
+### Bug Fixes
+
+* flickering layout fix and prevent duplicate fetches ([3174ba0](https://github.com/BhoomikaAnagodu/photoLog/commit/3174ba0bdd7e5cc07724041086dea2e8de16050e))
+
 # [1.4.0](https://github.com/BhoomikaAnagodu/photoLog/compare/v1.3.2...v1.4.0) (2025-11-21)
 
 
