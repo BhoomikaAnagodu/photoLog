@@ -14,6 +14,7 @@ const useHomePage = () => {
     useAppContext();
 
   const [page, setPage] = useState<number>(1);
+  const [isFetchingMore, setIsFetchingMore] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(false);
   const { setSnackbar } = useSnackbar();
   const PER_PAGE = 30;
@@ -22,7 +23,7 @@ const useHomePage = () => {
     async (
       query: string,
       newSearch: boolean = false,
-      pageOverride?: number
+      pageOverride?: number,
     ) => {
       try {
         const currentPage = pageOverride ?? page;
@@ -47,22 +48,23 @@ const useHomePage = () => {
         setIsFetching(false);
       }
     },
-    [setList, setIsFetching, setSnackbar]
+    [setList, setIsFetching, setSnackbar],
   );
 
   const loadMore = useCallback(async () => {
-    if (isFetching || !hasMore) return;
-
+    if (isFetching || isFetchingMore || !hasMore) return;
+    setIsFetchingMore(true);
     const nextPage = page + 1;
     setPage(nextPage);
     await getList(searchQuery || RANDOM_SEARCH_QUERY, false, nextPage);
-  }, [page, isFetching, hasMore, searchQuery, getList]);
+    setIsFetchingMore(false);
+  }, [page, isFetching, isFetchingMore, hasMore, searchQuery, getList]);
 
   const debounceOnChange = useCallback(
     debounce((query: string, newSearch: boolean, pageOverride: number) => {
       getList(query, newSearch, pageOverride);
     }, 800),
-    [getList]
+    [getList],
   );
 
   useEffect(() => {

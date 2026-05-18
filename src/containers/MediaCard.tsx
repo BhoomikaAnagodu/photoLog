@@ -14,7 +14,7 @@ interface MediaCardProps {
 
 const MediaCard = ({ imgData }: MediaCardProps) => {
   const location = useLocation();
-  const { urls, alt_description } = imgData;
+  const { urls, alt_description, width, height } = imgData;
   const { Login, runWithAuth, user } = useAuthCheckAction();
   const {
     handleLike,
@@ -40,6 +40,8 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
       <img
         src={urls?.small}
         alt={alt_description}
+        width={width}
+        height={height}
         className="rounded-2xl shadow w-full h-auto block"
         loading="lazy"
       />

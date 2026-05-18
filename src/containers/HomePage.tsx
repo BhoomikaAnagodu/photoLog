@@ -12,12 +12,14 @@ const HomePage = () => {
     <>
       <div className="my-5">
         {isFetching && list.length === 0 && (
-          <div className="columns-4 gap-4 my-6">
-            {Array.from({ length: 8 }).map((_, idx) => (
-              <div
-                key={idx}
-                className="mb-4 h-50 w-full bg-gray-100 animate-pulse rounded-2xl"
-              />
+          <div className="columns-2 sm:columns-3 md:columns-4 lg:columns-5 gap-4 my-6">
+            {Array.from({ length: 15 }).map((_, idx) => (
+              <div key={idx} className="mb-5 break-inside-avoid">
+                <div
+                  className="w-full bg-gray-100 animate-pulse rounded-2xl"
+                  style={{ height: `${[180, 240, 200, 160, 220][idx % 5]}px` }}
+                />
+              </div>
             ))}
           </div>
         )}
@@ -27,7 +29,18 @@ const HomePage = () => {
             dataLength={list.length}
             next={loadMore}
             hasMore={hasMore}
-            loader={null}
+            style={{ overflow: "visible" }}
+            scrollThreshold={0.8}
+            loader={
+              <div className="columns-4 gap-4 my-6">
+                {Array.from({ length: 8 }).map((_, idx) => (
+                  <div
+                    key={idx}
+                    className="mb-4 h-50 w-full bg-gray-100 animate-pulse rounded-2xl"
+                  />
+                ))}
+              </div>
+            }
           >
             <ResponsiveMasonry
               columnsCountBreakPoints={{ 300: 2, 500: 3, 700: 4, 900: 5 }}

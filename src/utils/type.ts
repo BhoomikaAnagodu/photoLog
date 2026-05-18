@@ -48,6 +48,8 @@ export interface ImageType {
   user: { name: string };
   likedAt?: Date;
   createdAt?: Date;
+  width: number;
+  height: number;
 }
 
 export interface AppContextType {
