@@ -1,6 +1,6 @@
 import { useLocation } from "react-router-dom";
 import Like from "../assets/icons/like.svg?react";
-import AddToCollectionIcon from "../assets/icons/plus.svg?react";
+import Plus from "../assets/icons/plus.svg?react";
 import Modal from "../components/Modal";
 
 import { useAuthCheckAction } from "../hooks/useAuthCheckAction";
@@ -29,6 +29,7 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
     collectionName,
     setCollectionName,
     handleDisLike,
+    openCollectionModal_withAuth,
   } = useMediaCardAction({
     runWithAuth,
     imageData: imgData,
@@ -44,6 +45,7 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
         height={height}
         className="rounded-2xl shadow w-full h-auto block"
         loading="lazy"
+        decoding="async"
       />
       <div className="invisible cursor-pointer absolute p-4 top-0 w-full h-full bg-black/30 rounded-2xl">
         <div className="flex gap-2 absolute top-4 right-2">
@@ -52,7 +54,7 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
               onClick={isLiked ? handleDisLike : handleLike}
               className={`bg-gray-200 px-2 py-1 ${
                 isLiked ? "" : "hover:[&>svg>path]:fill-gray-950"
-              }  rounded-sm hover:bg-gray-50`}
+              } rounded-sm hover:bg-gray-50`}
             >
               <Like
                 className={`w-4 h-4 ${
@@ -63,10 +65,10 @@ const MediaCard = ({ imgData }: MediaCardProps) => {
           )}
           {!isAddedToCollection && location.pathname === "/" && (
             <div
-              onClick={toggleCollectionModal}
+              onClick={openCollectionModal_withAuth}
               className="bg-gray-200 px-2 py-1 rounded-sm hover:[&>svg]:fill-gray-950 hover:bg-gray-50"
             >
-              <AddToCollectionIcon className="w-4 h-4 fill-gray-500" />
+              <Plus className="w-4 h-4 fill-gray-500" />
             </div>
           )}
         </div>

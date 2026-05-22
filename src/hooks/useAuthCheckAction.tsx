@@ -25,7 +25,7 @@ export const useAuthCheckAction = () => {
         setShowLogin(true);
       }
     },
-    [user]
+    [user],
   );
 
   const handleLoginClose = async (user: User | null) => {

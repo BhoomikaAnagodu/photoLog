@@ -6,6 +6,7 @@ export interface AuthContextType {
   collections: CollectionType[];
   likedImages: ImageType[];
   handleGetUserCollections: () => void;
+  collectionsLoading: boolean;
 }
 
 export interface SnackBarType {

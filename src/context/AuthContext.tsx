@@ -10,6 +10,7 @@ const initialState: AuthContextType = {
   collections: [],
   likedImages: [],
   handleGetUserCollections: () => {},
+  collectionsLoading: false,
 };
 
 const AuthContext = createContext<AuthContextType>(initialState);
@@ -18,15 +19,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [collections, setCollections] = useState<CollectionType[]>([]);
   const [likedImages, setLikedImages] = useState<ImageType[]>([]);
+  const [collectionsLoading, setCollectionsLoading] = useState<boolean>(false);
 
   const handleGetUserCollections = async () => {
     if (user) {
       try {
+        setCollectionsLoading(true);
         const userCollections = await getUserCollections(user.uid);
         setCollections(userCollections);
       } catch (error) {
         console.error("Failed to fetch user collections:", error);
         setCollections([]);
+      } finally {
+        setCollectionsLoading(false);
       }
     }
   };
@@ -62,7 +67,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <AuthContext.Provider
-      value={{ user, collections, handleGetUserCollections, likedImages }}
+      value={{
+        user,
+        collections,
+        handleGetUserCollections,
+        likedImages,
+        collectionsLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>

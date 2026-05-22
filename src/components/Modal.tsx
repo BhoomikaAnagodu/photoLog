@@ -19,11 +19,8 @@ const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
         onClose();
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [onClose]);
 
   useEffect(() => {
@@ -32,13 +29,13 @@ const Modal = ({ children, onClose, showCloseIcon = true }: ModalProps) => {
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onClose]);
 
   return (
     <div className="fixed inset-0 grid h-screen w-screen place-items-center bg-black/30 z-[1100]">
       <div
         ref={modalRef}
+        onMouseDown={(e) => e.stopPropagation()} // ← key fix: stops handleClickOutside from firing for clicks inside modal
         className="relative m-4 p-4 w-2/5 min-w-[40%] max-w-[40%] rounded-lg bg-white shadow-sm"
       >
         {showCloseIcon && (
